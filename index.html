@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="text" id="passage" placeholder="Passage..." />
+    <br />
+    <textarea
+      name="input"
+      id="input"
+      cols="100"
+      rows="50"
+      placeholder="Place scripture here"
+    ></textarea>
+    <textarea
+      name="output"
+      id="output"
+      cols="100"
+      rows="50"
+      placeholder="Result will show here"
+    ></textarea>
+    <script>
+      function generateResult(passage, remainingText, currentVerse = 1) {
+        if (currentVerse === 1 && !remainingText.match(/^1/)) {
+          return "Verse 1 is missing";
+        }
+        remainingText = remainingText.replace(`${currentVerse} `, "");
+        let verseText;
+        let nextVerse = currentVerse + 1;
+        let nextVerseIndex = remainingText.indexOf(nextVerse);
+        if (nextVerseIndex == -1) {
+          verseText = remainingText;
+          remainingText = "";
+          done = true;
+        } else {
+          verseText = remainingText.slice(0, nextVerseIndex);
+          remainingText = remainingText.slice(nextVerseIndex);
+          done = false;
+        }
+
+        verseText = verseText.replace(/\[\w\]/g, "");
+        verseText = verseText.replace(/\n\n/g, "\n");
+
+        let newText = `**${passage}:${currentVerse}**\n` + verseText;
+
+        if (done) {
+          return newText;
+        } else {
+          return (
+            newText + "\n\n" + generateResult(passage, remainingText, nextVerse)
+          );
+        }
+      }
+
+      let inputEl = document.getElementById("input");
+      let outputEl = document.getElementById("output");
+
+      inputEl.addEventListener("change", () => {
+        let passage = document.getElementById("passage").value;
+        debugger;
+        let result = generateResult(passage, inputEl.value);
+        outputEl.value = result;
+      });
+    </script>
+  </body>
+</html>
