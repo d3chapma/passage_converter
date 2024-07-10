@@ -45,6 +45,8 @@
         verseText = verseText.replace(/\[\w\]/g, "");
         verseText = verseText.replace(/\n\n/g, "\n");
 
+        debugger;
+
         let newText = `**${passage}:${currentVerse}**\n` + verseText;
 
         if (done) {
